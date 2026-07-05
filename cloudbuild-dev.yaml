@@ -1,36 +1,24 @@
 steps:
+  # Step 1: Compile the Go Application
   - name: 'gcr.io/cloud-builders/go'
-    env:
-      - 'GOPATH=/gopath'
-    args:
-      - 'build'
-      - '-o'
-      - 'main'
-      - 'main.go'
+    env: ['GOPATH=/gopath']
+    args: ['build', '-o', 'main', 'main.go']
 
+  # Step 2: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'build'
-      - '-t'
-      - 'us-east1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:$SHORT_SHA'
-      - '.'
+    args: ['build', '-t', 'us-east1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0', '.']
 
+  # Step 3: Push the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'push'
-      - 'us-east1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:$SHORT_SHA'
+    args: ['push', 'us-east1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0']
 
+  # Step 4: Deploy to dev namespace
   - name: 'gcr.io/cloud-builders/kubectl'
     id: 'Deploy'
-    args:
-      - '-n'
-      - 'dev'
-      - 'apply'
-      - '-f'
-      - 'dev/deployment.yaml'
+    args: ['-n', 'dev', 'apply', '-f', 'dev/deployment.yaml']
     env:
-      - 'CLOUDSDK_COMPUTE_ZONE=us-east1-d'
-      - 'CLOUDSDK_CONTAINER_CLUSTER=hello-cluster'
+    - 'CLOUDSDK_COMPUTE_ZONE=us-east1-d'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=hello-cluster'
 
 options:
   logging: CLOUD_LOGGING_ONLY
