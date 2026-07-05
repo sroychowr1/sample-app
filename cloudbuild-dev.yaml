@@ -4,10 +4,10 @@ steps:
     args: ['build', '-o', 'main', 'main.go']
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0', '.']
+    args: ['build', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v2.0', '.']
 
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v1.0']
+    args: ['push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/my-repository/hello-cloudbuild-dev:v2.0']
 
   - name: 'gcr.io/cloud-builders/kubectl'
     id: 'Deploy'
